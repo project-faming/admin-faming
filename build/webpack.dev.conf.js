@@ -13,6 +13,18 @@ function resolve(dir) {
   return path.join(__dirname, '..', dir)
 }
 
+const os = require('os');
+const networkInterfaces = os.networkInterfaces();
+
+let ip = '';
+for (let key in networkInterfaces) {
+  networkInterfaces[key].forEach(item => {
+    if (!item.internal && item.family === 'IPv4') {
+      ip = item.address;
+    }
+  });
+}
+
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 
@@ -33,7 +45,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     historyApiFallback: true,
     hot: true,
     compress: true,
-    host: HOST || config.dev.host,
+    host: ip,
     port: PORT || config.dev.port,
     open: config.dev.autoOpenBrowser,
     overlay: config.dev.errorOverlay
@@ -82,7 +94,7 @@ module.exports = new Promise((resolve, reject) => {
           compilationSuccessInfo: {
             messages: [
               `Your application is running here: http://${
-                devWebpackConfig.devServer.host
+              devWebpackConfig.devServer.host
               }:${port}`
             ]
           },

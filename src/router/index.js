@@ -169,6 +169,30 @@ export const asyncRouterMap = [
     ]
   },
   {
+    path: '/supplier',
+    component: Layout,
+    redirect: 'noredirect',
+    alwaysShow: true,
+    name: 'supplierManage',
+    meta: {
+      title: '供应商管理',
+      icon: 'supplier'
+    },
+    children: [
+      {
+        path: 'supplier-list',
+        component: () => import('@/views/supplier/supplier-list'),
+        name: 'supplier-list',
+        meta: {
+          perms: ['GET /admin/user/list'],
+          title: '供应商列表',
+          icon: 'supplier',
+          noCache: true
+        }
+      }
+    ]
+  },
+  {
     path: '/mall',
     component: Layout,
     redirect: 'noredirect',
@@ -179,17 +203,17 @@ export const asyncRouterMap = [
       icon: 'shopping'
     },
     children: [
-        {
-            path: 'purchase',
-            component: () => import('@/views/purchase/purchase'),
-            name: 'purchase',
-            meta: {
-                perms: ['GET /admin/user/list'],
-                title: '采购列表',
-                icon: 'shopping',
-                noCache: true
-            }
-        },
+      {
+        path: 'purchase',
+        component: () => import('@/views/purchase/purchase'),
+        name: 'purchase',
+        meta: {
+          perms: ['GET /admin/user/list'],
+          title: '采购列表',
+          icon: 'shopping',
+          noCache: true
+        }
+      },
       // {
       //   path: 'region',
       //   component: () => import('@/views/mall/region'),
@@ -371,7 +395,7 @@ export const asyncRouterMap = [
           icon: 'clipboard',
           noCache: true
         }
-      },
+      }
       // {
       //   path: 'coupon',
       //   component: () => import('@/views/promotion/coupon'),
@@ -463,7 +487,7 @@ export const asyncRouterMap = [
           icon: 'qq',
           noCache: true
         }
-      },
+      }
       // {
       //   path: 'os',
       //   component: () => import('@/views/sys/os'),
