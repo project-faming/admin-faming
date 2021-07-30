@@ -3,18 +3,19 @@
                :title="getTitle"
                width="70%">
         <section class="supplier-detail">
-            <form size="mini"
-                  label-position="right"
-                  label-width="150px">
+            <el-form size="mini"
+                     label-position="right"
+                     label-width="150px">
                 <el-form-item label="会员ID">
+                    <!--  -->
                     <el-select :placeholder="'请选择渠道'"
                                clearable
                                name="project"
                                style="width: 100%"
                                filterable
                                remote
-                               :remote-method="remoteMethod"
                                v-loadmore="loadMore"
+                               :remote-method="remoteMethod"
                                v-model="formData.channel_info">
                         <el-option v-for="item in position"
                                    :key="item.value"
@@ -23,7 +24,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-            </form>
+            </el-form>
         </section>
 
     </el-dialog>
@@ -49,7 +50,9 @@
                     channel_info: ''
                 },
                 position: [],
-                getAll: false
+                listInite: [],
+                getAll: false,
+                currentPage: 1
             }
         },
         computed: {
@@ -57,11 +60,14 @@
                 return this.edit === 'newForm' ? '新建' : '编辑'
             }
         },
-        mounted() {
+        created() {
             if (this.edit === '编辑') {
                 this.formData.channel_info = `${this.id}_${this.id}`
             }
+        },
+        mounted() {
 
+            this.loadList({});
         },
         methods: {
             remoteMethod(query) {
@@ -83,31 +89,26 @@
             async loadList(params) {
                 const that = this;
                 const { currentPage } = params;
-                try {
-                    // const { code, data } = await this.$request("channel_lists", {
-                    //     page: this.currentPage,
-                    //     page_size: 10,
-                    // });
 
-                    const { code, data } = await listGoods({
-                        page: this.currentPage,
-                        page_size: 10,
-                    })
-                    if (data) {
-                        const list = data.list.map((it) => ({
-                            value: it.id,
-                            label: it.channel_name,
-                        }));
-                        that.listInite = that.listInite.concat(list);
-                        that.position = that.listInite;
-                    }
-                    if (that.listInite.length >= data.total) {
-                        //已获取全部数据标志，当已获取全部数据时，不再访问接口拉取数据。
-                        that.getAll = true;
-                    }
-                } catch {
-                    console.log("bug");
+                const { data } = await listGoods({
+                    page: this.currentPage,
+                    limit: 10,
+                })
+                console.log(data);
+                if (data) {
+                    const list = data.data.items.map((it) => ({
+                        value: it.id,
+                        label: it.name,
+                    }));
+                    that.listInite = that.listInite.concat(list);
+                    that.position = that.listInite;
                 }
+                console.log(that.position);
+                if (that.listInite.length >= data.data.total) {
+                    //已获取全部数据标志，当已获取全部数据时，不再访问接口拉取数据。
+                    that.getAll = true;
+                }
+
             },
             loadMore() {
                 this.currentPage = this.currentPage + 1;

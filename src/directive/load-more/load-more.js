@@ -1,4 +1,4 @@
-const loadMore = {
+export default {
   /*
     bind 钩子函数，第一次绑定时调用，可以在这里做初始化设置
     el: 作用的 dom 对象
@@ -20,4 +20,4 @@ const loadMore = {
     el.removeEventListener('scroll', el.handler);
   },
 };
-export default loadMore
+
