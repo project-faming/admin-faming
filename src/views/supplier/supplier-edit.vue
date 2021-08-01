@@ -58,6 +58,7 @@
                 <el-form-item label="状态"
                               prop="status">
                     <el-select v-model="formData.status"
+                               clearable
                                style="width: 100%">
                         <el-option v-for="(item,key) in statusData"
                                    :key="key"
@@ -163,6 +164,7 @@
                 listInite: [],
                 getAll: false,
                 currentPage: 1,
+                query: '',
                 statusData: {
                     1: '待供应商确认',
                     2: '供应商已确认，采购中',
@@ -191,11 +193,6 @@
                 return totalPrice
             }
         },
-        created() {
-            if (this.edit === '编辑') {
-                this.formData.channel_info = `${this.id}_${this.id}`
-            }
-        },
         mounted() {
             this.loadList({});
         },
@@ -205,7 +202,6 @@
                     if (valid) {
                         const params = { ...this.formData }
                         params.supplierTotalPrice = this.supplierTotalPrice
-                        console.log(params);
                         supplierCreate(params).then(() => {
                             this.$notify.success({
                                 title: '成功',
@@ -217,47 +213,41 @@
                                 title: '失败',
                                 message: response.data.errmsg
                             })
+                        }).finally(() => {
+                            this.currentValue = false
                         })
                     }
                 });
             },
             remoteMethod(query) {
-                return;
                 this.query = query;
-                //如果搜索框是空的，就访问原始数据，否则从后台搜索
-                if (query !== "") {
-                    setTimeout(() => {
-                        this.searchData(query);
-                    }, 200);
-                } else {
-                    //userList就是select绑定的可选数据
-                    this.position = [];
-                }
+                this.searchData()
             },
             searchData(query) {
-                this.loadList(query);
+                this.listInite = [];
+                this.currentPage = 1
+                this.loadList();
             },
             async loadList(params) {
-                const that = this;
-                const { currentPage } = params;
-
                 const { data } = await listGoods({
                     page: this.currentPage,
                     limit: 10,
+                    name: this.query
                 })
-                console.log(data);
                 if (data) {
                     const list = data.data.items.map((it) => ({
                         value: it.id,
                         label: it.name,
                     }));
-                    that.listInite = that.listInite.concat(list);
-                    that.position = that.listInite;
+                    this.listInite = this.listInite.concat(list);
+                    this.position = this.listInite;
                 }
-                console.log(that.position);
-                if (that.listInite.length >= data.data.total) {
+                console.log(this.position);
+                if (this.listInite.length >= data.data.total) {
                     //已获取全部数据标志，当已获取全部数据时，不再访问接口拉取数据。
-                    that.getAll = true;
+                    this.getAll = true;
+                } else {
+                    this.getAll = false;
                 }
 
             },

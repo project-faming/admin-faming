@@ -17,10 +17,17 @@ export function supplierCreate(data) {
     data
   })
 }
-export function supplierDelete(data) {
+export function supplierDelete(query) {
   return request({
     url: '/supplier/delete',
-    method: 'post',
-    data
+    method: 'get',
+    params: query
+  })
+}
+export function supplierChangeStatus(query) {
+  return request({
+    url: '/supplier/changeStatus',
+    method: 'get',
+    params: query
   })
 }

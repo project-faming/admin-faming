@@ -18,6 +18,7 @@
                        size="mini"
                        type="primary"
                        icon="el-icon-edit"
+                       v-permission="['POST /admin/supplier/create']"
                        @click="handleCreate">新建</el-button>
         </div>
 
@@ -68,9 +69,11 @@
                     <el-button type="primary"
                                size="mini"
                                style="width:80px"
+                               v-permission="['POST /admin/supplier/changeStatus']"
                                @click="handleChangeStatus(scope.row)">状态修改</el-button>
                     <el-button type="danger"
                                size="mini"
+                               v-permission="['POST /admin/supplier/delete']"
                                @click="handleDelete(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
@@ -90,6 +93,11 @@
                        v-model="editStatus"
                        :edit="edit"
                        @refechList="handleFilter" />
+        <change-status v-if="statusFlag"
+                       v-model="statusFlag"
+                       :id="detail.id"
+                       :status="detail.status"
+                       @refechList="getList"></change-status>
     </div>
 </template>
 <script>
@@ -97,9 +105,10 @@
     import BackToTop from '@/components/BackToTop'
     import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
     import SupplierEdit from './supplier-edit.vue'
+    import ChangeStatus from './change-status.vue'
     export default {
         name: 'ArticleList',
-        components: { BackToTop, Pagination, SupplierEdit },
+        components: { BackToTop, Pagination, SupplierEdit, ChangeStatus },
         data() {
             return {
                 list: [],
@@ -107,11 +116,13 @@
                 listLoading: true,
                 editStatus: false,
                 edit: '',
+                statusFlag: false,
                 listQuery: {
                     page: 1,
                     limit: 20,
                     name: '',
-                }
+                },
+                detail: {}
             }
         },
         created() {
@@ -140,8 +151,8 @@
                 this.edit = 'newForm'
             },
             handleChangeStatus(row) {
-                this.editStatus = true
-                this.edit = 'editForm'
+                this.statusFlag = true
+                this.detail = row
             },
             handleDelete(row) {
                 supplierDelete({
