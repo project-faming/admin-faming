@@ -184,7 +184,7 @@ export const asyncRouterMap = [
         component: () => import('@/views/supplier/supplier-list'),
         name: 'supplier-list',
         meta: {
-          perms: ['GET /admin/user/list'],
+          perms: ['GET /admin/supplier/getList', 'POST /admin/supplier/create', 'GET /admin/supplier/changeStatus', 'GET /admin/supplier/delete'],
           title: '供应商列表',
           icon: 'supplier',
           noCache: true
