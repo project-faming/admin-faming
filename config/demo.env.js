@@ -1,5 +1,5 @@
 module.exports = {
   NODE_ENV: '"production"',
   ENV_CONFIG: '"dep"',
-  BASE_API: '"http://arge.linde.xin/a/admin"'
+  BASE_API: '"https://youjiacang.com/a/admin"'
 }
