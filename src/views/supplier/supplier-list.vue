@@ -35,7 +35,8 @@
                              label="商品ID"
                              prop="productId" />
             <el-table-column align="center"
-                             label="商户名称"
+                             label="商品名称"
+                             show-overflow-tooltip
                              prop="productName" />
             <el-table-column align="center"
                              label="商品价格"
@@ -53,8 +54,11 @@
                              label="采购总价"
                              prop="supplierTotalPrice" />
             <el-table-column align="center"
-                             label="状态"
-                             prop="status" />
+                             label="状态">
+                <template slot-scope="scope">
+                    <span>{{statusData[scope.row.status]}}</span>
+                </template>
+            </el-table-column>
             <el-table-column align="center"
                              label="结算日"
                              prop="applyDay" />
@@ -92,11 +96,13 @@
         <supplier-edit v-if="editStatus"
                        v-model="editStatus"
                        :edit="edit"
+                       :statusData="statusData"
                        @refechList="handleFilter" />
         <change-status v-if="statusFlag"
                        v-model="statusFlag"
                        :id="detail.id"
                        :status="detail.status"
+                       :statusData="statusData"
                        @refechList="getList"></change-status>
     </div>
 </template>
@@ -122,7 +128,13 @@
                     limit: 20,
                     name: '',
                 },
-                detail: {}
+                detail: {},
+                statusData: {
+                    1: '待供应商确认',
+                    2: '供应商已确认-采购中',
+                    3: '采购完成-平台未打款',
+                    4: '平台已打款'
+                }
             }
         },
         created() {

@@ -11,8 +11,8 @@
                      :rules="rules"
                      label-width="150px">
                 <el-form-item label="商品"
-                              prop="productId">
-                    <el-select :placeholder="'请选择渠道'"
+                              prop="product">
+                    <el-select :placeholder="'请选择商品'"
                                clearable
                                name="project"
                                style="width: 100%"
@@ -20,38 +20,43 @@
                                remote
                                v-loadmore="loadMore"
                                :remote-method="remoteMethod"
-                               v-model="formData.productId">
+                               v-model="formData.product">
                         <el-option v-for="item in position"
                                    :key="item.value"
                                    :label="item.label"
-                                   :value="item.value">
+                                   :value="item">
                         </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="商品价格"
                               prop="productPrice">
-                    <el-input v-model="formData.productPrice">
+                    <el-input v-model="formData.productPrice"
+                              placeholder="请输入商品价格">
                         <template slot="append">元</template>
                     </el-input>
 
                 </el-form-item>
                 <el-form-item label="商品库存"
                               prop="productSku">
-                    <el-input v-model="formData.productSku"></el-input>
+                    <el-input v-model="formData.productSku"
+                              placeholder="请输入商品库存"></el-input>
                 </el-form-item>
                 <el-form-item label="采购数量"
                               prop="supplierOne">
-                    <el-input v-model="formData.supplierOne"></el-input>
+                    <el-input v-model="formData.supplierOne"
+                              placeholder="请输入采购数量"></el-input>
                 </el-form-item>
                 <el-form-item label="采购单价"
                               prop="supplierPrice">
-                    <el-input v-model="formData.supplierPrice">
+                    <el-input v-model="formData.supplierPrice"
+                              placeholder="请输入采购单价">
                         <template slot="append">元</template>
                     </el-input>
                 </el-form-item>
                 <el-form-item label="采购总价">
                     <el-input :disabled="true"
-                              v-model="supplierTotalPrice">
+                              v-model="supplierTotalPrice"
+                              placeholder="请输入采购总价">
                         <template slot="append">元</template>
                     </el-input>
                 </el-form-item>
@@ -59,6 +64,7 @@
                               prop="status">
                     <el-select v-model="formData.status"
                                clearable
+                               placeholder="请选择采购状态"
                                style="width: 100%">
                         <el-option v-for="(item,key) in statusData"
                                    :key="key"
@@ -68,7 +74,8 @@
                 </el-form-item>
                 <el-form-item label="结算申请日"
                               prop="applyDay">
-                    <el-input v-model="formData.applyDay"></el-input>
+                    <el-input v-model="formData.applyDay"
+                              placeholder="请输入结算申请日"></el-input>
                 </el-form-item>
             </el-form>
         </section>
@@ -94,6 +101,10 @@
             id: {
                 type: String,
                 default: ''
+            },
+            statusData: {
+                type: Object,
+                default: () => { }
             }
         },
         data() {
@@ -128,7 +139,7 @@
 
             return {
                 formData: {
-                    productId: '',
+                    product: null,
                     productPrice: '',
                     productSku: '',
                     status: '',
@@ -138,7 +149,7 @@
                     applyDay: ''
                 },
                 rules: {
-                    productId: [
+                    product: [
                         { required: true, message: '请选择商品', trigger: 'change' }
                     ],
                     productPrice: [
@@ -165,12 +176,7 @@
                 getAll: false,
                 currentPage: 1,
                 query: '',
-                statusData: {
-                    1: '待供应商确认',
-                    2: '供应商已确认，采购中',
-                    3: '采购完成，为结款',
-                    4: '已借款'
-                }
+
             }
         },
         computed: {
@@ -198,10 +204,20 @@
         },
         methods: {
             handleQuery() {
+                console.log(this.formData);
                 this.$refs.ruleForm.validate((valid) => {
                     if (valid) {
-                        const params = { ...this.formData }
+                        const data = { ...this.formData }
+                        console.log(data);
+                        const params = {
+                            ...data,
+                            productId: data.product.value,
+                            productName: data.product.label
+                        }
+
                         params.supplierTotalPrice = this.supplierTotalPrice
+                        console.log(params);
+                        delete params.product
                         supplierCreate(params).then(() => {
                             this.$notify.success({
                                 title: '成功',

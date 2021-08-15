@@ -44,6 +44,10 @@
             id: {
                 type: Number,
                 default: ''
+            },
+            statusData: {
+                type: Object,
+                default: () => { }
             }
         },
         data() {
@@ -57,12 +61,6 @@
                         { required: true, message: '请选择状态', trigger: 'change' }
                     ],
                 },
-                statusData: {
-                    1: '待供应商确认',
-                    2: '供应商已确认，采购中',
-                    3: '采购完成，为结款',
-                    4: '已借款'
-                }
             }
         },
         mounted() {
