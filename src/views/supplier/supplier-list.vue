@@ -69,11 +69,11 @@
                     <el-button type="primary"
                                size="mini"
                                style="width:80px"
-                               v-permission="['POST /admin/supplier/changeStatus']"
+                               v-permission="['GET /admin/supplier/changeStatus']"
                                @click="handleChangeStatus(scope.row)">状态修改</el-button>
                     <el-button type="danger"
                                size="mini"
-                               v-permission="['POST /admin/supplier/delete']"
+                               v-permission="['GET /admin/supplier/delete']"
                                @click="handleDelete(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
