@@ -168,30 +168,30 @@ export const asyncRouterMap = [
       }
     ]
   },
-  {
-    path: '/supplier',
-    component: Layout,
-    redirect: 'noredirect',
-    alwaysShow: true,
-    name: 'supplierManage',
-    meta: {
-      title: '供应商管理',
-      icon: 'supplier'
-    },
-    children: [
-      {
-        path: 'supplier-list',
-        component: () => import('@/views/supplier/supplier-list'),
-        name: 'supplier-list',
-        meta: {
-          perms: ['GET /admin/supplier/getList', 'POST /admin/supplier/create', 'GET /admin/supplier/changeStatus', 'GET /admin/supplier/delete'],
-          title: '供应商列表',
-          icon: 'supplier',
-          noCache: true
-        }
-      }
-    ]
-  },
+  // {
+  //   path: '/supplier',
+  //   component: Layout,
+  //   redirect: 'noredirect',
+  //   alwaysShow: true,
+  //   name: 'supplierManage',
+  //   meta: {
+  //     title: '供应商管理',
+  //     icon: 'supplier'
+  //   },
+  //   children: [
+  //     {
+  //       path: 'supplier-list',
+  //       component: () => import('@/views/supplier/supplier-list'),
+  //       name: 'supplier-list',
+  //       meta: {
+  //         perms: ['GET /admin/supplier/getList', 'POST /admin/supplier/create', 'GET /admin/supplier/changeStatus', 'GET /admin/supplier/delete'],
+  //         title: '供应商列表',
+  //         icon: 'supplier',
+  //         noCache: true
+  //       }
+  //     }
+  //   ]
+  // },
   {
     path: '/mall',
     component: Layout,
